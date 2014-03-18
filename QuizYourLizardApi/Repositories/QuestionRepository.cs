@@ -6,8 +6,13 @@ using System.Web;
 
 namespace QuizYourLizardApi.Repositories
 {
+    public interface IQuestionRepository :
+        IGenericRepository<QuestionModel>
+    {
+
+    }
     public class QuestionRepository :
-        GenericRepository<QuizContext, QuestionModel>
+        GenericRepository<QuizContext, QuestionModel>, IQuestionRepository
     {
         public IQueryable<QuestionModel> GetAllQuestionsForQuiz(Guid Id)
         {

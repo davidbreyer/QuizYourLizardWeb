@@ -18,6 +18,11 @@ namespace QuizYourLizardApi.Controllers
             {
                 var returnValue = questionRepo.GetAll().ToList();
 
+                foreach(var question in returnValue)
+                {
+                    question.QuizName = question.Quiz.Name;
+                }
+
                 return returnValue;
             }
         }
@@ -64,7 +69,7 @@ namespace QuizYourLizardApi.Controllers
                 question.Id = id;
                 question.Updated = DateTimeOffset.Now;
 
-                questionRepo.Add(question);
+                questionRepo.Edit(question);
                 questionRepo.Save();
             }
         }

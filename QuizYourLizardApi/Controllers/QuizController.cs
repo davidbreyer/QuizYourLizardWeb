@@ -8,67 +8,59 @@ using QuizYourLizardApi.Models;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using QuizYourLizardApi.Repositories;
+using Microsoft.Practices.Unity;
 
 namespace QuizYourLizardApi.Controllers
 {
     public class QuizController : ApiController
     {
+        IQuizRepository QuizRepository { get; set; }
+        public QuizController(IQuizRepository quizRepository)
+        {
+            QuizRepository = quizRepository;
+        }
+
         // GET api/quiz
         public IEnumerable<QuizModel> Get()
         {
-            using (var quizRepo = new QuizRepository())
-            {
-                var returnValue = quizRepo.GetAll();
+            var returnValue = QuizRepository.GetAll();
             
-                return returnValue.ToList();
-            }
+            return returnValue.ToList();
         }
 
         // GET api/quiz/5
         public QuizModel Get(Guid id)
         {
-            using (var quizRepo = new QuizRepository())
-            {
-                return quizRepo.FindBy(x => x.Id == id).SingleOrDefault();
-            }
+            return QuizRepository.FindBy(x => x.Id == id).SingleOrDefault();
         }
 
         // POST api/quiz
         public void Post([FromBody]QuizModel quiz)
         {
-            using (var quizRepo = new QuizRepository())
-            {
-                quiz.Id = Guid.NewGuid();
-                quiz.Updated = DateTimeOffset.Now;
+            quiz.Id = Guid.NewGuid();
+            quiz.Updated = DateTimeOffset.Now;
 
-                quizRepo.Add(quiz);
-                quizRepo.Save();
-            }
+            QuizRepository.Add(quiz);
+            QuizRepository.Save();
         }
 
         // PUT api/quiz/5
         public void Put(Guid id, [FromBody]QuizModel quiz)
         {
-            using (var quizRepo = new QuizRepository())
-            {
-                quiz.Id = id;
-                quiz.Updated = DateTimeOffset.Now;
+            quiz.Id = id;
+            quiz.Updated = DateTimeOffset.Now;
 
-                quizRepo.Edit(quiz);
-                quizRepo.Save();
-            }
+            QuizRepository.Edit(quiz);
+            QuizRepository.Save();
         }
 
         // DELETE api/quiz/5
         public void Delete(Guid id)
         {
-            using (var quizRepo = new QuizRepository())
-            {
-                var quizToDelete = quizRepo.FindBy(x => x.Id == id).SingleOrDefault();
+            var quizToDelete = QuizRepository.FindBy(x => x.Id == id).SingleOrDefault();
 
-                quizRepo.Delete(quizToDelete);
-                quizRepo.Save();
-            }
+            QuizRepository.Delete(quizToDelete);
+            QuizRepository.Save();
         }
     }
 }

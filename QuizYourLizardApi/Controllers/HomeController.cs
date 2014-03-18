@@ -13,13 +13,15 @@ namespace QuizYourLizardApi.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-            using (var client = new HttpClient())
-            {
-                var model = client.GetAsync("http://localhost:29323/api/quiz").Result
-                    .Content.ReadAsAsync<List<QuizModel>>().Result;
+            //using (var client = new HttpClient())
+            //{
+            //    var model = client.GetAsync("http://localhost:29323/api/quiz").Result
+            //        .Content.ReadAsAsync<List<QuizModel>>().Result;
 
-                return View(model);
-            }
+            //    return View(model);
+            //}
+
+            return View();
         }
     }
 }

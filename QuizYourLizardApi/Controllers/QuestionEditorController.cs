@@ -9,49 +9,47 @@ using System.Web.Mvc;
 
 namespace QuizYourLizardApi.Controllers
 {
-    public class QuizEditorController : Controller
+    public class QuestionEditorController : Controller
     {
         static Uri url = new Uri(System.Web.HttpContext.Current.Request.Url.AbsoluteUri);
         string _endPoint = url.GetLeftPart(UriPartial.Authority);
-
         //
-        // GET: /QuizEditor/
+        // GET: /QuestionEditor/
         public ActionResult Index()
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_endPoint);
-                var model = client.GetAsync(string.Format("/api/quiz/")).Result
-                    .Content.ReadAsAsync<List<QuizModel>>().Result;
+                var model = client.GetAsync(string.Format("/api/question")).Result
+                    .Content.ReadAsAsync<List<QuestionModel>>().Result;
 
                 return View(model);
             }
         }
 
         //
-        // GET: /QuizEditor/Details/5
-        public ActionResult Details(Guid id)
-        {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_endPoint);
-
-                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
-                    .Content.ReadAsAsync<QuizModel>().Result;
-
-                return View(model);
-            }
-        }
-
-        //
-        // GET: /QuizEditor/Create
-        public ActionResult Create()
+        // GET: /QuestionEditor/Details/5
+        public ActionResult Details(int id)
         {
             return View();
         }
 
         //
-        // POST: /QuizEditor/Create
+        // GET: /QuestionEditor/Create
+        public ActionResult Create()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_endPoint);
+                ViewBag.AllQuizTypes = client.GetAsync(string.Format("/api/quiz")).Result
+                    .Content.ReadAsAsync<List<QuizModel>>().Result;
+
+                return View();
+            }
+        }
+
+        //
+        // POST: /QuestionEditor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection collection)
@@ -61,9 +59,10 @@ namespace QuizYourLizardApi.Controllers
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_endPoint);
-                    var result = client.PostAsync(string.Format("/api/quiz"), new
+                    var result = client.PostAsync(string.Format("/api/question"), new
                     {
-                        Name = Convert.ToString(collection["Name"])
+                        Text = Convert.ToString(collection["Text"])
+                        , QuizId = Convert.ToString(collection["QuizId"])
                     }, new JsonMediaTypeFormatter()).Result;
                     if (result.IsSuccessStatusCode)
                     {
@@ -83,21 +82,25 @@ namespace QuizYourLizardApi.Controllers
         }
 
         //
-        // GET: /QuizEditor/Edit/5
+        // GET: /QuestionEditor/Edit/5
         public ActionResult Edit(Guid id)
         {
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_endPoint);
-                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
-                    .Content.ReadAsAsync<QuizModel>().Result;
+                var model = client.GetAsync(string.Format("/api/question/{0}", id)).Result
+                    .Content.ReadAsAsync<QuestionModel>().Result;
+
+                ViewBag.AllQuizTypes = client.GetAsync(string.Format("/api/quiz")).Result
+                    .Content.ReadAsAsync<List<QuizModel>>().Result;
 
                 return View(model);
             }
         }
 
         //
-        // POST: /QuizEditor/Edit/5
+        // POST: /QuestionEditor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Guid id, FormCollection collection)
@@ -105,10 +108,11 @@ namespace QuizYourLizardApi.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_endPoint);
-                var result = client.PutAsync(string.Format("/api/quiz/{0}", id), new
+                var result = client.PutAsync(string.Format("/api/question/{0}", id), new
                 {
                     id = id,
-                    Name = Convert.ToString(collection["Name"])
+                    Text = Convert.ToString(collection["Text"]),
+                    QuizId = Convert.ToString(collection["QuizId"])
                 }, new JsonMediaTypeFormatter()).Result;
                 if (result.IsSuccessStatusCode)
                 {
@@ -123,24 +127,17 @@ namespace QuizYourLizardApi.Controllers
         }
 
         //
-        // GET: /QuizEditor/Delete/5
+        // GET: /QuestionEditor/Delete/5
         public ActionResult Delete(Guid id)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_endPoint);
-                var model = client.DeleteAsync(string.Format("/api/quiz/{0}", id)).Result
-                    .Content.ReadAsAsync<QuizModel>().Result;
-
-                return RedirectToAction("Index");
-            }
+            return View();
         }
 
         //
-        // POST: /QuizEditor/Delete/5
+        // POST: /QuestionEditor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Guid id, FormCollection collection)
+        public ActionResult Delete(int id, FormCollection collection)
         {
             try
             {

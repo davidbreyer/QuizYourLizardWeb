@@ -12,12 +12,12 @@ namespace QuizYourLizardApi.App_Start
         /// <summary>Integrates Unity when the application starts.</summary>
         public static void Start() 
         {
-            var container = UnityConfig.GetConfiguredContainer();
+            //var container = UnityConfig.RegisterComponents();
 
-            FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
-            FilterProviders.Providers.Add(new UnityFilterAttributeFilterProvider(container));
+            //FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
+            //FilterProviders.Providers.Add(new UnityFilterAttributeFilterProvider(container));
 
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            //DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
 
 

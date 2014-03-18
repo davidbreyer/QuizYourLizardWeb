@@ -9,6 +9,7 @@ using System.Web.Routing;
 using QuizYourLizardApi.Migrations;
 using System.Data.Entity;
 using QuizYourLizardApi.Models;
+using QuizYourLizardApi.App_Start;
 
 namespace QuizYourLizardApi
 {
@@ -17,6 +18,7 @@ namespace QuizYourLizardApi
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            UnityConfig.RegisterComponents();  
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

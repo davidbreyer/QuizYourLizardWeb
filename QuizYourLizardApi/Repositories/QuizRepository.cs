@@ -6,8 +6,11 @@ using System.Web;
 
 namespace QuizYourLizardApi.Repositories
 {
+    public interface IQuizRepository : IGenericRepository<QuizModel>
+    {
+    }
     public class QuizRepository :
-        GenericRepository<QuizContext, QuizModel>
+        GenericRepository<QuizContext, QuizModel>, IQuizRepository
     {
     }
 }
