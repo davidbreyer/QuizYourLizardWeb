@@ -11,79 +11,78 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuestionController : ApiController
     {
+        public IQuestionRepository QuestionRepository { get; set; }
+
+        public QuestionController(IQuestionRepository questionRepository)
+        {
+            QuestionRepository = questionRepository;
+        }
+
         // GET api/question
         public IEnumerable<QuestionModel> Get()
         {
-            using (var questionRepo = new QuestionRepository())
+            var returnValue = QuestionRepository.GetAll().ToList();
+
+            foreach(var question in returnValue)
             {
-                var returnValue = questionRepo.GetAll().ToList();
-
-                foreach(var question in returnValue)
-                {
-                    question.QuizName = question.Quiz.Name;
-                }
-
-                return returnValue;
+                question.QuizName = question.Quiz.Name;
             }
+
+            return returnValue;
         }
 
         //// GET api/quiz/
         [Route("api/quiz/{quizId}/questions/{questionCount}")]
         public IEnumerable<QuestionModel> Get(Guid QuizId, int QuestionCount)
         {
-            using (var questionRepo = new QuestionRepository())
-            {
-                var returnValue = questionRepo.FindBy(x => x.QuizId == QuizId);
+           var returnValue = QuestionRepository.FindBy(x => x.QuizId == QuizId);
 
-                return returnValue.ToList();
-            }
+           foreach (var question in returnValue)
+           {
+               question.QuizName = question.Quiz.Name;
+           }
+
+           return returnValue.ToList();
         }
 
         // GET api/question/5
         public QuestionModel Get(Guid id)
         {
-            using (var questionRepo = new QuestionRepository())
-            {
-                return questionRepo.FindBy(x => x.Id == id).SingleOrDefault();
-            }
+            
+            var returnValue = QuestionRepository.FindBy(x => x.Id == id).SingleOrDefault();
+
+            returnValue.QuizName = returnValue.Quiz.Name;
+
+            return returnValue;
         }
 
         // POST api/question
         public void Post([FromBody]QuestionModel question)
         {
-            using (var questionRepo = new QuestionRepository())
-            {
-                question.Id = Guid.NewGuid();
-                question.Updated = DateTimeOffset.Now;
+            question.Id = Guid.NewGuid();
+            question.Updated = DateTimeOffset.Now;
 
-                questionRepo.Add(question);
-                questionRepo.Save();
-            }
+            QuestionRepository.Add(question);
+            QuestionRepository.Save();
         }
 
         // PUT api/question/5
         public void Put(Guid id, [FromBody]QuestionModel question)
         {
-            using (var questionRepo = new QuestionRepository())
-            {
-                question.Id = id;
-                question.Updated = DateTimeOffset.Now;
+            question.Id = id;
+            question.Updated = DateTimeOffset.Now;
 
-                questionRepo.Edit(question);
-                questionRepo.Save();
-            }
+            QuestionRepository.Edit(question);
+            QuestionRepository.Save();
         }
 
         // DELETE api/question/5
         public void Delete(Guid id)
         {
-            using (var questionRepo = new QuestionRepository())
-            {
-                var quqestionToDelete = questionRepo.FindBy(x => x.Id == id).SingleOrDefault();
+            var questionToDelete = QuestionRepository.FindBy(x => x.Id == id).SingleOrDefault();
 
-                questionRepo.Delete(quqestionToDelete);
-                questionRepo.Save();
-            }
+            QuestionRepository.Delete(questionToDelete);
+            QuestionRepository.Save();
         }
     }
 }

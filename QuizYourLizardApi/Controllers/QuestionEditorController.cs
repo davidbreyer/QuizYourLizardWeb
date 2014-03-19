@@ -29,9 +29,16 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /QuestionEditor/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_endPoint);
+                var model = client.GetAsync(string.Format("/api/question/{0}", id)).Result
+                    .Content.ReadAsAsync<QuestionModel>().Result;
+
+                return View(model);
+            }
         }
 
         //
@@ -85,7 +92,6 @@ namespace QuizYourLizardApi.Controllers
         // GET: /QuestionEditor/Edit/5
         public ActionResult Edit(Guid id)
         {
-
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_endPoint);
@@ -130,18 +136,30 @@ namespace QuizYourLizardApi.Controllers
         // GET: /QuestionEditor/Delete/5
         public ActionResult Delete(Guid id)
         {
-            return View();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_endPoint);
+                var model = client.GetAsync(string.Format("/api/question/{0}", id)).Result
+                    .Content.ReadAsAsync<QuestionModel>().Result;
+
+                return View(model);
+            }
         }
 
         //
         // POST: /QuestionEditor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(Guid id, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_endPoint);
+                    var model = client.DeleteAsync(string.Format("/api/question/{0}", id)).Result
+                    .Content.ReadAsAsync<QuizModel>().Result;
+                }
 
                 return RedirectToAction("Index");
             }

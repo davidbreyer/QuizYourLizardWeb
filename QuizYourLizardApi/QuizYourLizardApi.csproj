@@ -256,6 +256,9 @@
     <Content Include="Views\QuestionEditor\Index.cshtml" />
     <Content Include="Views\QuestionEditor\Create.cshtml" />
     <Content Include="Views\QuestionEditor\Edit.cshtml" />
+    <Content Include="Views\QuestionEditor\Details.cshtml" />
+    <Content Include="Views\QuestionEditor\Delete.cshtml" />
+    <Content Include="Views\QuizEditor\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

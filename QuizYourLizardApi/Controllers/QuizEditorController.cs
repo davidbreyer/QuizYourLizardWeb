@@ -129,10 +129,10 @@ namespace QuizYourLizardApi.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_endPoint);
-                var model = client.DeleteAsync(string.Format("/api/quiz/{0}", id)).Result
+                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
-                return RedirectToAction("Index");
+                return View(model);
             }
         }
 
@@ -144,9 +144,14 @@ namespace QuizYourLizardApi.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_endPoint);
+                    var model = client.DeleteAsync(string.Format("/api/quiz/{0}", id)).Result
+                        .Content.ReadAsAsync<QuizModel>().Result;
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
