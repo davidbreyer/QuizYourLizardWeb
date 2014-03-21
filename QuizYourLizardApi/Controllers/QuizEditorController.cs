@@ -12,36 +12,38 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuizEditorController : Controller
     {
-        //static Uri url = new Uri(System.Web.HttpContext.Current.Request.Url.AbsoluteUri);
-        //string _endPoint = url.GetLeftPart(UriPartial.Authority);
+        private readonly HttpClient Client;
+
+        public QuizEditorController()
+            : this(new HttpClient())
+        { }
+
+        public QuizEditorController(HttpClient httpClient)
+        {
+            Client = httpClient;
+            Client.BaseAddress = new Uri(Functions.GetApiUri());
+        }
 
         //
         // GET: /QuizEditor/
         public ActionResult Index()
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Functions.GetApiUri());
-                var model = client.GetAsync(string.Format(Constants.QuizApiUri)).Result
+           var model = Client.GetAsync(Constants.QuizApiUri).Result
                     .Content.ReadAsAsync<List<QuizModel>>().Result;
 
                 return View(model);
-            }
+           
         }
 
         //
         // GET: /QuizEditor/Details/5
         public ActionResult Details(Guid id)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Functions.GetApiUri());
-
-                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
-            }
+            
         }
 
         //
@@ -59,10 +61,8 @@ namespace QuizYourLizardApi.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(Functions.GetApiUri());
-                    var result = client.PostAsync(string.Format(Constants.QuizApiUri), new
+
+                    var result = Client.PostAsync(Constants.QuizApiUri, new
                     {
                         Name = Convert.ToString(collection["Name"])
                     }, new JsonMediaTypeFormatter()).Result;
@@ -75,7 +75,7 @@ namespace QuizYourLizardApi.Controllers
                         string content = result.Content.ReadAsStringAsync().Result;
                         return View();
                     }
-                }
+                
             }
             catch
             {
@@ -87,14 +87,12 @@ namespace QuizYourLizardApi.Controllers
         // GET: /QuizEditor/Edit/5
         public ActionResult Edit(Guid id)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Functions.GetApiUri());
-                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+            Client.BaseAddress = new Uri(Functions.GetApiUri());
+                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
-            }
+         
         }
 
         //
@@ -103,10 +101,8 @@ namespace QuizYourLizardApi.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Guid id, FormCollection collection)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Functions.GetApiUri());
-                var result = client.PutAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id), new
+            
+                var result = Client.PutAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id), new
                 {
                     id = id,
                     Name = Convert.ToString(collection["Name"])
@@ -120,21 +116,18 @@ namespace QuizYourLizardApi.Controllers
                     string content = result.Content.ReadAsStringAsync().Result;
                     return View();
                 }
-            }
+            
         }
 
         //
         // GET: /QuizEditor/Delete/5
         public ActionResult Delete(Guid id)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Functions.GetApiUri());
-                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
-            }
+            
         }
 
         //
@@ -145,14 +138,11 @@ namespace QuizYourLizardApi.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(Functions.GetApiUri());
-                    var model = client.DeleteAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+                    var model = Client.DeleteAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                         .Content.ReadAsAsync<QuizModel>().Result;
 
                     return RedirectToAction("Index");
-                }
+                
             }
             catch
             {
