@@ -1,4 +1,5 @@
-﻿using QuizYourLizardApi.Models;
+﻿using QuizYourLizardApi.CrossCutting;
+using QuizYourLizardApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuizEditorController : Controller
     {
-        static Uri url = new Uri(System.Web.HttpContext.Current.Request.Url.AbsoluteUri);
-        string _endPoint = url.GetLeftPart(UriPartial.Authority);
+        //static Uri url = new Uri(System.Web.HttpContext.Current.Request.Url.AbsoluteUri);
+        //string _endPoint = url.GetLeftPart(UriPartial.Authority);
 
         //
         // GET: /QuizEditor/
@@ -20,8 +21,8 @@ namespace QuizYourLizardApi.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_endPoint);
-                var model = client.GetAsync(string.Format("/api/quiz/")).Result
+                client.BaseAddress = new Uri(Functions.GetApiUri());
+                var model = client.GetAsync(string.Format(Constants.QuizApiUri)).Result
                     .Content.ReadAsAsync<List<QuizModel>>().Result;
 
                 return View(model);
@@ -34,9 +35,9 @@ namespace QuizYourLizardApi.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_endPoint);
+                client.BaseAddress = new Uri(Functions.GetApiUri());
 
-                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
+                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
@@ -60,8 +61,8 @@ namespace QuizYourLizardApi.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri(_endPoint);
-                    var result = client.PostAsync(string.Format("/api/quiz"), new
+                    client.BaseAddress = new Uri(Functions.GetApiUri());
+                    var result = client.PostAsync(string.Format(Constants.QuizApiUri), new
                     {
                         Name = Convert.ToString(collection["Name"])
                     }, new JsonMediaTypeFormatter()).Result;
@@ -88,8 +89,8 @@ namespace QuizYourLizardApi.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_endPoint);
-                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
+                client.BaseAddress = new Uri(Functions.GetApiUri());
+                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
@@ -104,8 +105,8 @@ namespace QuizYourLizardApi.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_endPoint);
-                var result = client.PutAsync(string.Format("/api/quiz/{0}", id), new
+                client.BaseAddress = new Uri(Functions.GetApiUri());
+                var result = client.PutAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id), new
                 {
                     id = id,
                     Name = Convert.ToString(collection["Name"])
@@ -128,8 +129,8 @@ namespace QuizYourLizardApi.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_endPoint);
-                var model = client.GetAsync(string.Format("/api/quiz/{0}", id)).Result
+                client.BaseAddress = new Uri(Functions.GetApiUri());
+                var model = client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
@@ -146,8 +147,8 @@ namespace QuizYourLizardApi.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri(_endPoint);
-                    var model = client.DeleteAsync(string.Format("/api/quiz/{0}", id)).Result
+                    client.BaseAddress = new Uri(Functions.GetApiUri());
+                    var model = client.DeleteAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
                         .Content.ReadAsAsync<QuizModel>().Result;
 
                     return RedirectToAction("Index");

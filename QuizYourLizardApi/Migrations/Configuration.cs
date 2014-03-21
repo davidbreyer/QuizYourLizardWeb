@@ -12,6 +12,7 @@ namespace QuizYourLizardApi.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(QuizYourLizardApi.Models.QuizContext context)

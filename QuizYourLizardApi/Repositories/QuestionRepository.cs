@@ -9,7 +9,7 @@ namespace QuizYourLizardApi.Repositories
     public interface IQuestionRepository :
         IGenericRepository<QuestionModel>
     {
-
+        IQueryable<QuestionModel> GetAllQuestionsForQuiz(Guid Id);
     }
     public class QuestionRepository :
         GenericRepository<QuizContext, QuestionModel>, IQuestionRepository
