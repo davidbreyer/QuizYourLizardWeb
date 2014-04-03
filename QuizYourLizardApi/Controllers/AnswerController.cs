@@ -11,23 +11,23 @@ namespace QuizYourLizardApi.Controllers
 {
     public class AnswerController : ApiController
     {
-        IAnswerRepository AnswerRepository { get; set; }
-        public AnswerController(IAnswerRepository answerRepository)
+        IGenericAccessor<QuizContext, AnswerModel> AnswerAccessor { get; set; }
+        public AnswerController(IGenericAccessor<QuizContext, AnswerModel> answerAccessor)
         {
-            AnswerRepository = answerRepository;
+            AnswerAccessor = answerAccessor;
         }
 
         // GET api/answer
         public IEnumerable<AnswerModel> Get()
         {
-            return AnswerRepository.GetAll().ToList();
+            return AnswerAccessor.Repository.GetAll().ToList();
         }
 
         //// GET api/question/
         [Route("api/question/{questionId}/answers/{answerCount}")]
         public IEnumerable<AnswerModel> Get(Guid QuestionId, int AnswerCount)
         {
-            var returnValue = AnswerRepository.FindBy(x => x.QuestionId == QuestionId);
+            var returnValue = AnswerAccessor.Repository.FindBy(x => x.QuestionId == QuestionId);
 
             return returnValue.ToList();
         }
@@ -35,7 +35,7 @@ namespace QuizYourLizardApi.Controllers
         // GET api/answer/5
         public AnswerModel Get(Guid id)
         {
-            return AnswerRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            return AnswerAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
         }
 
         // POST api/answer
@@ -44,8 +44,8 @@ namespace QuizYourLizardApi.Controllers
             answer.Id = Guid.NewGuid();
             answer.Updated = DateTimeOffset.Now;
 
-            AnswerRepository.Add(answer);
-            AnswerRepository.Save();
+            AnswerAccessor.Repository.Add(answer);
+            AnswerAccessor.Commit();
             
         }
 
@@ -55,17 +55,17 @@ namespace QuizYourLizardApi.Controllers
             answer.Id = id;
             answer.Updated = DateTimeOffset.Now;
 
-            AnswerRepository.Add(answer);
-            AnswerRepository.Save();
+            AnswerAccessor.Repository.Add(answer);
+            AnswerAccessor.Commit();
         }
 
         // DELETE api/answer/5
         public void Delete(Guid id)
         {
-            var answerToDelete = AnswerRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            var answerToDelete = AnswerAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
-            AnswerRepository.Delete(answerToDelete);
-            AnswerRepository.Save();
+            AnswerAccessor.Repository.Delete(answerToDelete);
+            AnswerAccessor.Commit();
         }
     }
 }

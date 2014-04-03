@@ -14,24 +14,24 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuizController : ApiController
     {
-        IQuizRepository QuizRepository { get; set; }
-        public QuizController(IQuizRepository quizRepository)
+        private IGenericAccessor<QuizContext, QuizModel> QuizAccessor;
+
+        public QuizController(IGenericAccessor<QuizContext, QuizModel> quizAccessor)
         {
-            QuizRepository = quizRepository;
+            QuizAccessor = quizAccessor;
         }
 
         // GET api/quiz
         public IEnumerable<QuizModel> Get()
         {
-            var returnValue = QuizRepository.GetAll();
-            
+            var returnValue = QuizAccessor.Repository.GetAllAsync();
             return returnValue.ToList();
         }
 
         // GET api/quiz/5
         public QuizModel Get(Guid id)
         {
-            return QuizRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            return QuizAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
         }
 
         // POST api/quiz
@@ -40,8 +40,8 @@ namespace QuizYourLizardApi.Controllers
             quiz.Id = Guid.NewGuid();
             quiz.Updated = DateTimeOffset.Now;
 
-            QuizRepository.Add(quiz);
-            QuizRepository.Save();
+            QuizAccessor.Repository.Add(quiz);
+            QuizAccessor.Commit();
         }
 
         // PUT api/quiz/5
@@ -50,17 +50,17 @@ namespace QuizYourLizardApi.Controllers
             quiz.Id = id;
             quiz.Updated = DateTimeOffset.Now;
 
-            QuizRepository.Edit(quiz);
-            QuizRepository.Save();
+            QuizAccessor.Repository.Edit(quiz);
+            QuizAccessor.Commit();
         }
 
         // DELETE api/quiz/5
         public void Delete(Guid id)
         {
-            var quizToDelete = QuizRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            var quizToDelete = QuizAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
-            QuizRepository.Delete(quizToDelete);
-            QuizRepository.Save();
+            QuizAccessor.Repository.Delete(quizToDelete);
+            QuizAccessor.Commit();
         }
     }
 }

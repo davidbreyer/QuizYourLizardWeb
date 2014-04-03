@@ -9,7 +9,6 @@ using System.Web.Routing;
 using QuizYourLizardApi.Migrations;
 using System.Data.Entity;
 using QuizYourLizardApi.Models;
-using QuizYourLizardApi.App_Start;
 
 namespace QuizYourLizardApi
 {

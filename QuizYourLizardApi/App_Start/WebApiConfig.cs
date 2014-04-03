@@ -23,12 +23,6 @@ namespace QuizYourLizardApi
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            //config.Routes.MapHttpRoute(
-            //    name: "GetQuestionsData",
-            //    routeTemplate: "api/{controller}/{id}/{questionCount}",
-            //    defaults: new { controller = "Question", action = "Get", id = RouteParameter.Optional, questionCount = RouteParameter.Optional }
-            //);
         }
     }
 }

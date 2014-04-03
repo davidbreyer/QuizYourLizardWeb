@@ -11,17 +11,17 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuestionController : ApiController
     {
-        public IQuestionRepository QuestionRepository { get; set; }
+        IGenericAccessor<QuizContext, QuestionModel> QuestionAccessor { get; set; }
 
-        public QuestionController(IQuestionRepository questionRepository)
+        public QuestionController(IGenericAccessor<QuizContext, QuestionModel> questionAccessor)//IQuestionRepository questionRepository)
         {
-            QuestionRepository = questionRepository;
+            QuestionAccessor = questionAccessor;
         }
 
         // GET api/question
         public IEnumerable<QuestionModel> Get()
         {
-            var returnValue = QuestionRepository.GetAll().ToList();
+            var returnValue = QuestionAccessor.Repository.GetAll().ToList();
 
             foreach(var question in returnValue)
             {
@@ -35,7 +35,7 @@ namespace QuizYourLizardApi.Controllers
         [Route("api/quiz/{quizId}/questions/{questionCount}")]
         public IEnumerable<QuestionModel> Get(Guid QuizId, int QuestionCount)
         {
-           var returnValue = QuestionRepository.FindBy(x => x.QuizId == QuizId);
+           var returnValue = QuestionAccessor.Repository.FindBy(x => x.QuizId == QuizId);
 
            foreach (var question in returnValue)
            {
@@ -49,7 +49,7 @@ namespace QuizYourLizardApi.Controllers
         public QuestionModel Get(Guid id)
         {
             
-            var returnValue = QuestionRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            var returnValue = QuestionAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
             returnValue.QuizName = returnValue.Quiz.Name;
 
@@ -62,8 +62,8 @@ namespace QuizYourLizardApi.Controllers
             question.Id = Guid.NewGuid();
             question.Updated = DateTimeOffset.Now;
 
-            QuestionRepository.Add(question);
-            QuestionRepository.Save();
+            QuestionAccessor.Repository.Add(question);
+            QuestionAccessor.Commit();
         }
 
         // PUT api/question/5
@@ -72,17 +72,17 @@ namespace QuizYourLizardApi.Controllers
             question.Id = id;
             question.Updated = DateTimeOffset.Now;
 
-            QuestionRepository.Edit(question);
-            QuestionRepository.Save();
+            QuestionAccessor.Repository.Edit(question);
+            QuestionAccessor.Commit();
         }
 
         // DELETE api/question/5
         public void Delete(Guid id)
         {
-            var questionToDelete = QuestionRepository.FindBy(x => x.Id == id).SingleOrDefault();
+            var questionToDelete = QuestionAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
-            QuestionRepository.Delete(questionToDelete);
-            QuestionRepository.Save();
+            QuestionAccessor.Repository.Delete(questionToDelete);
+            QuestionAccessor.Commit();
         }
     }
 }

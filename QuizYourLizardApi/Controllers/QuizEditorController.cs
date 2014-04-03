@@ -1,5 +1,7 @@
-﻿using QuizYourLizardApi.CrossCutting;
+﻿using Microsoft.Practices.Unity;
+using QuizYourLizardApi.CrossCutting;
 using QuizYourLizardApi.Models;
+using QuizYourLizardApi.Proxies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,37 +15,30 @@ namespace QuizYourLizardApi.Controllers
     public class QuizEditorController : Controller
     {
         private readonly HttpClient Client;
+        IQuizProxy QuizProxy { get; set; }
 
-        public QuizEditorController()
-            : this(new HttpClient())
-        { }
-
-        public QuizEditorController(HttpClient httpClient)
+        public QuizEditorController(IQuizProxy quizProxy, HttpClient httpClient)
         {
             Client = httpClient;
-            Client.BaseAddress = new Uri(Functions.GetApiUri());
+            QuizProxy = quizProxy;
         }
 
         //
         // GET: /QuizEditor/
         public ActionResult Index()
         {
-           var model = Client.GetAsync(Constants.QuizApiUri).Result
-                    .Content.ReadAsAsync<List<QuizModel>>().Result;
+            var model = QuizProxy.GetAllQuizzes();
 
-                return View(model);
-           
+            return View(model);
         }
 
         //
         // GET: /QuizEditor/Details/5
         public ActionResult Details(Guid id)
         {
-                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
-                    .Content.ReadAsAsync<QuizModel>().Result;
+            var model = QuizProxy.GetQuizById(id);
 
-                return View(model);
-            
+            return View(model);
         }
 
         //
@@ -57,24 +52,26 @@ namespace QuizYourLizardApi.Controllers
         // POST: /QuizEditor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(QuizModel model)
         {
             try
             {
-
-                    var result = Client.PostAsync(Constants.QuizApiUri, new
-                    {
-                        Name = Convert.ToString(collection["Name"])
-                    }, new JsonMediaTypeFormatter()).Result;
+                if (ModelState.IsValid)
+                {
+                    var result = Client.PostAsync(Constants.QuizApiUri, model
+                        , new JsonMediaTypeFormatter()).Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction(@"Index");
                     }
                     else
                     {
                         string content = result.Content.ReadAsStringAsync().Result;
                         return View();
                     }
+                }
+
+                return View();
                 
             }
             catch
@@ -87,8 +84,7 @@ namespace QuizYourLizardApi.Controllers
         // GET: /QuizEditor/Edit/5
         public ActionResult Edit(Guid id)
         {
-            Client.BaseAddress = new Uri(Functions.GetApiUri());
-                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+                var model = Client.GetAsync(string.Format(@"{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
@@ -99,14 +95,13 @@ namespace QuizYourLizardApi.Controllers
         // POST: /QuizEditor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Guid id, FormCollection collection)
+        public ActionResult Edit(Guid id, QuizModel model)
         {
-            
-                var result = Client.PutAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id), new
-                {
-                    id = id,
-                    Name = Convert.ToString(collection["Name"])
-                }, new JsonMediaTypeFormatter()).Result;
+
+            if (ModelState.IsValid)
+            {
+                var result = Client.PutAsync(string.Format(@"{0}/{1}", Constants.QuizApiUri, id), model
+                    , new JsonMediaTypeFormatter()).Result;
                 if (result.IsSuccessStatusCode)
                 {
                     return RedirectToAction("Index");
@@ -116,32 +111,40 @@ namespace QuizYourLizardApi.Controllers
                     string content = result.Content.ReadAsStringAsync().Result;
                     return View();
                 }
+            }
             
+            return View();
         }
 
         //
         // GET: /QuizEditor/Delete/5
         public ActionResult Delete(Guid id)
         {
-                var model = Client.GetAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
+                var model = Client.GetAsync(string.Format(@"{0}/{1}", Constants.QuizApiUri, id)).Result
                     .Content.ReadAsAsync<QuizModel>().Result;
 
                 return View(model);
-            
         }
 
         //
         // POST: /QuizEditor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Guid id, FormCollection collection)
+        public ActionResult Delete(Guid id, QuizModel model)
         {
             try
             {
-                    var model = Client.DeleteAsync(string.Format("{0}/{1}", Constants.QuizApiUri, id)).Result
-                        .Content.ReadAsAsync<QuizModel>().Result;
+                var result = Client.DeleteAsync(string.Format(@"{0}/{1}", Constants.QuizApiUri, id)).Result;
 
+                if (result.IsSuccessStatusCode)
+                {
                     return RedirectToAction("Index");
+                }
+                else
+                {
+                    string content = result.Content.ReadAsStringAsync().Result;
+                    return View();
+                }
                 
             }
             catch

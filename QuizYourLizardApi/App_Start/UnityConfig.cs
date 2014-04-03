@@ -1,9 +1,12 @@
 using Microsoft.Practices.Unity;
 using QuizYourLizardApi.CrossCutting;
+using QuizYourLizardApi.Proxies;
 using QuizYourLizardApi.Repositories;
 using System;
+using System.Configuration;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Mvc;
 using Unity.WebApi;
 
 namespace QuizYourLizardApi
@@ -17,16 +20,21 @@ namespace QuizYourLizardApi
             // register all your components with the container here
             // it is NOT necessary to register your controllers
 
-            //Uri url = new Uri(System.Web.HttpContext.Current.Request.Url.AbsoluteUri);
-            //string _endPoint = url.GetLeftPart(UriPartial.Authority);
-            //string _endPoint = "http://localhost:29323";
-
             // e.g. container.RegisterType<ITestService, TestService>();
-            container.RegisterType<IQuizRepository, QuizRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<IQuestionRepository, QuestionRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<IAnswerRepository, AnswerRepository>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IBaseClient, BaseClient>(new HierarchicalLifetimeManager(), new InjectionProperty("BaseAddress", new Uri(_endPoint)));
-            
+            container.RegisterType<HttpClient>(
+                new InjectionFactory(x =>
+                    new HttpClient { BaseAddress = new Uri(ConfigurationManager.AppSettings["ApiUrl"]) }
+                )
+            );
+            container.RegisterType<IQuizProxy, QuizProxy>();
+            container.RegisterType(typeof(IGenericRepository<,>), typeof(GenericRepository<,>), new HierarchicalLifetimeManager());
+            container.RegisterType(typeof(IGenericAccessor<,>), typeof(GenericAccessor<,>), new HierarchicalLifetimeManager());
+            container.RegisterType(typeof(IUnitOfWork<>), typeof(UnitOfWork<>), new HierarchicalLifetimeManager());
+
+            //This Unity container will resolve MVC 5 Controllers.
+            DependencyResolver.SetResolver(new Unity.Mvc5.UnityDependencyResolver(container));
+
+            //This will resolve Web Api controllers.
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
