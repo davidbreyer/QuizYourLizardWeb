@@ -20,6 +20,8 @@ namespace QuizYourLizardApi.Repositories
     void Add(T entity);
     void Delete(T entity);
     void Edit(T entity);
+    List<T> GetPageAsync(int page, int pageSize);
+
     C Context { get; set; }
 }
 
@@ -49,7 +51,6 @@ public class GenericRepository<C, T> :
 
     public IQueryable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
     {
-
         IQueryable<T> query = _entities.Set<T>().Where(predicate);
         return query;
     }
@@ -68,10 +69,16 @@ public class GenericRepository<C, T> :
     {
         _entities.Entry(entity).State = System.Data.Entity.EntityState.Modified;
     }
+    
+    public List<T> GetPageAsync(int page, int pageSize)
+    {
+        var internalPage = page - 1;
+        return _entities.Set<T>().OrderBy(e => e.Id).Skip(pageSize * internalPage).Take(pageSize).ToListAsync<T>().Result;
+    }
 
     public virtual void Save()
     {
-        //_entities.SaveChanges();
+        _entities.SaveChanges();
     }
 
     //Implementing IDisposable correctly http://msdn.microsoft.com/en-us/library/ms244737.aspx
@@ -86,7 +93,11 @@ public class GenericRepository<C, T> :
     {
         if (disposing)
         {
-            //_entities.Dispose();
+            if (_entities != null)
+            {
+                _entities.Dispose();
+                _entities = null;
+            }
         }
     }
 }

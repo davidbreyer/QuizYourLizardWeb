@@ -178,6 +178,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GenericAccessor.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\QuizAccessor.cs" />
     <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Resources\Quiz\Localization.Designer.cs">
       <AutoGen>True</AutoGen>

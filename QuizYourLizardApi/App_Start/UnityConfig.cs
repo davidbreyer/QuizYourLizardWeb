@@ -30,6 +30,7 @@ namespace QuizYourLizardApi
             container.RegisterType(typeof(IGenericRepository<,>), typeof(GenericRepository<,>), new HierarchicalLifetimeManager());
             container.RegisterType(typeof(IGenericAccessor<,>), typeof(GenericAccessor<,>), new HierarchicalLifetimeManager());
             container.RegisterType(typeof(IUnitOfWork<>), typeof(UnitOfWork<>), new HierarchicalLifetimeManager());
+            container.RegisterType<IQuizAccessor, QuizAccessor>(new HierarchicalLifetimeManager());
 
             //This Unity container will resolve MVC 5 Controllers.
             DependencyResolver.SetResolver(new Unity.Mvc5.UnityDependencyResolver(container));

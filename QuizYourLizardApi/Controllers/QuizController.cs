@@ -14,9 +14,10 @@ namespace QuizYourLizardApi.Controllers
 {
     public class QuizController : ApiController
     {
-        private IGenericAccessor<QuizContext, QuizModel> QuizAccessor;
+        //private IGenericAccessor<QuizContext, QuizModel> QuizAccessor;
+        private IQuizAccessor QuizAccessor;
 
-        public QuizController(IGenericAccessor<QuizContext, QuizModel> quizAccessor)
+        public QuizController(IQuizAccessor quizAccessor) //IGenericAccessor<QuizContext, QuizModel> quizAccessor)
         {
             QuizAccessor = quizAccessor;
         }

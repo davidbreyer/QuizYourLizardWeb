@@ -48,7 +48,16 @@ namespace QuizYourLizardApi.Repositories
         {
             if (disposing)
             {
-                //_entities.Dispose();
+                if(UnitOfWork != null)
+                {
+                    UnitOfWork.Dispose();
+                    UnitOfWork = null;
+                }
+                if(Repository != null)
+                {
+                    Repository.Dispose();
+                    Repository = null;
+                }
             }
         }
     }
