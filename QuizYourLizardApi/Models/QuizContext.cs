@@ -60,6 +60,8 @@ namespace QuizYourLizardApi.Models
 
             return base.SaveChangesAsync();
         }
+
+        public System.Data.Entity.DbSet<QuizYourLizardApi.Pocos.AnswerDto> AnswerDtoes { get; set; }
     }
     
     public class QuizMappings : EntityTypeConfiguration<QuizModel>

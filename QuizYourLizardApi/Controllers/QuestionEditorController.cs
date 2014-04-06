@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using QuizYourLizardApi.CrossCutting;
 using QuizYourLizardApi.Models;
+using QuizYourLizardApi.Pocos;
 using QuizYourLizardApi.Proxies;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ using System.Web.Mvc;
 
 namespace QuizYourLizardApi.Controllers
 {
-    public class QuestionEditorController : BaseEditorController<QuestionModel>
+    public class QuestionEditorController : BaseEditorController<QuestionDto>
     {
-        public IBaseProxy<QuizModel> QuizProxy { get; set; }
+        public IBaseProxy<QuizDto> QuizProxy { get; set; }
 
-        public QuestionEditorController(IBaseProxy<QuestionModel> questionProxy
-            , IBaseProxy<QuizModel> quizProxy)
+        public QuestionEditorController(IBaseProxy<QuestionDto> questionProxy
+            , IBaseProxy<QuizDto> quizProxy)
         {
             Proxy = questionProxy;
             QuizProxy = quizProxy;

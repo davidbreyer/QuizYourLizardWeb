@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuizYourLizardApi.Models.QuestionModel>
+﻿@model IEnumerable<QuizYourLizardApi.Pocos.QuestionDto>
 
 @{
     ViewBag.Title = "Index";
@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Quiz.Name)
+            @Html.DisplayNameFor(model => model.QuizName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Text)
@@ -26,7 +26,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Quiz.Name)
+            @Html.DisplayFor(modelItem => item.QuizName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Text)

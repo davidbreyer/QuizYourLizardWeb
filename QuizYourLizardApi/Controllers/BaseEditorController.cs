@@ -1,4 +1,5 @@
 ﻿using QuizYourLizardApi.Models;
+using QuizYourLizardApi.Pocos;
 using QuizYourLizardApi.Proxies;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Web.Mvc;
 namespace QuizYourLizardApi.Controllers
 {
     public abstract class BaseEditorController<T> : Controller
-        where T : PersistentEntity
+        where T : ClientEntity
     {
         protected IBaseProxy<T> Proxy { get; set; }
 

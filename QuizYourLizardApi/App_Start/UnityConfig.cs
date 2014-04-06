@@ -1,5 +1,7 @@
 using Microsoft.Practices.Unity;
 using QuizYourLizardApi.CrossCutting;
+using QuizYourLizardApi.Models;
+using QuizYourLizardApi.Pocos;
 using QuizYourLizardApi.Proxies;
 using QuizYourLizardApi.Repositories;
 using System;
@@ -36,6 +38,13 @@ namespace QuizYourLizardApi
 
             //This will resolve Web Api controllers.
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+
+            AutoMapper.Mapper.CreateMap<QuestionModel, QuestionDto>()
+                .ForMember(x=>x.QuizName, opt=>opt.MapFrom(x=>x.Quiz.Name));
+            AutoMapper.Mapper.CreateMap<QuestionDto, QuestionModel>();
+            AutoMapper.Mapper.CreateMap<AnswerModel, AnswerDto>()
+                .ForMember(x => x.QuestionText, opt => opt.MapFrom(x => x.Question.Text));
+            AutoMapper.Mapper.CreateMap<AnswerDto, AnswerModel>();
         }
     }
 }

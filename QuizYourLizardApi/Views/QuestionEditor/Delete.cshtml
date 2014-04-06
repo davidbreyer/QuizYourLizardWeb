@@ -1,4 +1,4 @@
-﻿@model QuizYourLizardApi.Models.QuestionModel
+﻿@model QuizYourLizardApi.Pocos.QuestionDto
 
 @{
     ViewBag.Title = "Delete";
@@ -12,11 +12,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Quiz.Name)
+            @Html.DisplayNameFor(model => model.QuizName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Quiz.Name)
+            @Html.DisplayFor(model => model.QuizName)
         </dd>
 
         <dt>

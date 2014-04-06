@@ -12,7 +12,7 @@ using Microsoft.Practices.Unity;
 
 namespace QuizYourLizardApi.Controllers
 {
-    public class QuizController : BaseApiController<QuizContext, QuizModel>
+    public class QuizController : BaseApiController<QuizContext, QuizModel, QuizModel>
     {
         public QuizController(IGenericAccessor<QuizContext, QuizModel> quizAccessor)
         {

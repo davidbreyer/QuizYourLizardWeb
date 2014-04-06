@@ -10,30 +10,35 @@ using System.Web.Http;
 
 namespace QuizYourLizardApi.Controllers
 {
-    public interface IBaseApiController<T>
+    public interface IBaseApiController<T, D>
         where T : PersistentEntity
+        where D : class
     {
-        IEnumerable<T> Get();
-        T Get(Guid id);
+        IEnumerable<D> Get();
+        D Get(Guid id);
         void Post([FromBody]T value);
         void Put(Guid id, [FromBody]T value);
         void Delete(Guid id);
     }
 
-    public abstract class BaseApiController<C, T> : ApiController, IBaseApiController<T>
+    public abstract class BaseApiController<C, T, D> : ApiController, IBaseApiController<T, D>
     where T : PersistentEntity
     where C : DbContext, new()
+    where D : class
     {
         protected IGenericAccessor<C, T> Accessor { get; set; }
 
-        public IEnumerable<T> Get()
+        public IEnumerable<D> Get()
         {
-            var returnValue = Accessor.Repository.GetAllAsync();
-            return returnValue.ToList();
+            var returnValue = Accessor.Repository.GetAllAsync().ToList();
+            return AutoMapper.Mapper.Map<IEnumerable<T>, IEnumerable<D>>(returnValue);
         }
-        public T Get(Guid id)
+        public D Get(Guid id)
         {
-            return Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+            var entity = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+            var entityPoco = AutoMapper.Mapper.Map<T, D>(entity);
+
+            return entityPoco;
         }
         public void Post([FromBody]T value)
         {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using QuizYourLizardApi.CrossCutting;
 using QuizYourLizardApi.Models;
+using QuizYourLizardApi.Pocos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Web;
 namespace QuizYourLizardApi.Proxies
 {
     public interface IBaseProxy<T>
-        where T : PersistentEntity
+        where T : ClientEntity
     {
         HttpClient Client { get; set; }
         List<T> GetAllEntities();
@@ -23,7 +24,7 @@ namespace QuizYourLizardApi.Proxies
     }
 
     public class BaseProxy<T> : IBaseProxy<T>
-        where T : PersistentEntity, new()
+        where T : ClientEntity, new()
     {
         [Dependency]
         public HttpClient Client { get; set; }
