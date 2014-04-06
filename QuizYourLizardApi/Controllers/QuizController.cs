@@ -12,56 +12,63 @@ using Microsoft.Practices.Unity;
 
 namespace QuizYourLizardApi.Controllers
 {
-    public class QuizController : ApiController
+    public class QuizController : BaseApiController<QuizContext, QuizModel>
     {
-        //private IGenericAccessor<QuizContext, QuizModel> QuizAccessor;
-        private IQuizAccessor QuizAccessor;
-
-        public QuizController(IQuizAccessor quizAccessor) //IGenericAccessor<QuizContext, QuizModel> quizAccessor)
+        public QuizController(IGenericAccessor<QuizContext, QuizModel> quizAccessor)
         {
-            QuizAccessor = quizAccessor;
-        }
-
-        // GET api/quiz
-        public IEnumerable<QuizModel> Get()
-        {
-            var returnValue = QuizAccessor.Repository.GetAllAsync();
-            return returnValue.ToList();
-        }
-
-        // GET api/quiz/5
-        public QuizModel Get(Guid id)
-        {
-            return QuizAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
-        }
-
-        // POST api/quiz
-        public void Post([FromBody]QuizModel quiz)
-        {
-            quiz.Id = Guid.NewGuid();
-            quiz.Updated = DateTimeOffset.Now;
-
-            QuizAccessor.Repository.Add(quiz);
-            QuizAccessor.Commit();
-        }
-
-        // PUT api/quiz/5
-        public void Put(Guid id, [FromBody]QuizModel quiz)
-        {
-            quiz.Id = id;
-            quiz.Updated = DateTimeOffset.Now;
-
-            QuizAccessor.Repository.Edit(quiz);
-            QuizAccessor.Commit();
-        }
-
-        // DELETE api/quiz/5
-        public void Delete(Guid id)
-        {
-            var quizToDelete = QuizAccessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
-
-            QuizAccessor.Repository.Delete(quizToDelete);
-            QuizAccessor.Commit();
+            Accessor = quizAccessor;
         }
     }
+
+    //public class QuizController : ApiController, IBaseApiController<QuizModel>
+    //{
+    //    private IGenericAccessor<QuizContext, QuizModel> Accessor;
+
+    //    public QuizController(IGenericAccessor<QuizContext, QuizModel> quizAccessor)
+    //    {
+    //        Accessor = quizAccessor;
+    //    }
+
+    //     GET api/quiz
+    //    public IEnumerable<QuizModel> Get()
+    //    {
+    //        var returnValue = Accessor.Repository.GetAllAsync();
+    //        return returnValue.ToList();
+    //    }
+
+    //     GET api/quiz/5
+    //    public QuizModel Get(Guid id)
+    //    {
+    //        return Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+    //    }
+
+    //     POST api/quiz
+    //    public void Post([FromBody]QuizModel quiz)
+    //    {
+    //        quiz.Id = Guid.NewGuid();
+    //        quiz.Updated = DateTimeOffset.Now;
+
+    //        Accessor.Repository.Add(quiz);
+    //        Accessor.Commit();
+    //    }
+
+    //     PUT api/quiz/5
+    //    public void Put(Guid id, [FromBody]QuizModel quiz)
+    //    {
+    //        quiz.Id = id;
+    //        quiz.Updated = DateTimeOffset.Now;
+
+    //        Accessor.Repository.Edit(quiz);
+    //        Accessor.Commit();
+    //    }
+
+    //     DELETE api/quiz/5
+    //    public void Delete(Guid id)
+    //    {
+    //        var quizToDelete = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+
+    //        Accessor.Repository.Delete(quizToDelete);
+    //        Accessor.Commit();
+    //    }
+    //}
 }

@@ -67,7 +67,13 @@ public class GenericRepository<C, T> :
 
     public virtual void Edit(T entity)
     {
-        _entities.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+        var entityToUpdate = _entities.Set<T>().Where(x=>x.Id == entity.Id).SingleOrDefaultAsync().Result;
+
+        if (entityToUpdate == null) throw new Exception(string.Format("{0} is not a valid identity key for this object.", entity.Id));
+
+        _entities.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+
+        _entities.Entry(entityToUpdate).Property("Created").IsModified = false;
     }
     
     public List<T> GetPageAsync(int page, int pageSize)
@@ -78,7 +84,7 @@ public class GenericRepository<C, T> :
 
     public virtual void Save()
     {
-        _entities.SaveChanges();
+        _entities.SaveChangesAsync();
     }
 
     //Implementing IDisposable correctly http://msdn.microsoft.com/en-us/library/ms244737.aspx

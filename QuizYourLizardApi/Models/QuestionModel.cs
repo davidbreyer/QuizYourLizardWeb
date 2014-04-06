@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using QuizYourLizardApi.CrossCutting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Xml.Serialization;
 
 namespace QuizYourLizardApi.Models
 {
+    [Table("Question")]
     public class QuestionModel : PersistentEntity
     {
         public Guid QuizId { get; set; }
@@ -25,5 +27,11 @@ namespace QuizYourLizardApi.Models
 
         [NotMapped]
         public string QuizName { get; set; }
+
+        [NotMapped]
+        public override string ApiUri
+        {
+            get { return Constants.QuestionApiUri; }
+        }
     }
 }

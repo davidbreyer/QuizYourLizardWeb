@@ -27,6 +27,7 @@ namespace QuizYourLizardApi
                 )
             );
             container.RegisterType<IQuizProxy, QuizProxy>();
+            container.RegisterType(typeof(IBaseProxy<>), typeof(BaseProxy<>), new HierarchicalLifetimeManager());
             container.RegisterType(typeof(IGenericRepository<,>), typeof(GenericRepository<,>), new HierarchicalLifetimeManager());
             container.RegisterType(typeof(IGenericAccessor<,>), typeof(GenericAccessor<,>), new HierarchicalLifetimeManager());
             container.RegisterType(typeof(IUnitOfWork<>), typeof(UnitOfWork<>), new HierarchicalLifetimeManager());

@@ -7,11 +7,21 @@ using System.Web;
 
 namespace QuizYourLizardApi.Models
 {
-    public class PersistentEntity
+    public abstract class PersistentEntity
     {
-        [Key] //, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        
+
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTimeOffset Updated { get; set; }
+        
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTimeOffset Created { get; set; }
+
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
+
+        [NotMapped]
+        public abstract string ApiUri { get; }
     }
 }

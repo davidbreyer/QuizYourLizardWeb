@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\BaseEditor\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -156,6 +157,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\BaseEditorController.cs" />
     <Compile Include="CrossCutting\Constants.cs" />
     <Compile Include="CrossCutting\Functions.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
@@ -165,6 +168,15 @@
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\QuizEditorController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Migrations\201404052242088_CreateDateStamp.cs" />
+    <Compile Include="Migrations\201404052242088_CreateDateStamp.Designer.cs">
+      <DependentUpon>201404052242088_CreateDateStamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404052255578_timestamp.cs" />
+    <Compile Include="Migrations\201404052255578_timestamp.Designer.cs">
+      <DependentUpon>201404052255578_timestamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Proxies\BaseProxy.cs" />
     <Compile Include="Proxies\QuizProxy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -247,6 +259,12 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201404052242088_CreateDateStamp.resx">
+      <DependentUpon>201404052242088_CreateDateStamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404052255578_timestamp.resx">
+      <DependentUpon>201404052255578_timestamp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Quiz\Localization.de.resx" />
     <EmbeddedResource Include="Resources\Quiz\Localization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
