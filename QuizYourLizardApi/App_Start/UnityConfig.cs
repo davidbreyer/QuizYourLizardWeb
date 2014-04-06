@@ -39,6 +39,7 @@ namespace QuizYourLizardApi
             //This will resolve Web Api controllers.
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
 
+            //AutoMapper Mappings
             AutoMapper.Mapper.CreateMap<QuestionModel, QuestionDto>()
                 .ForMember(x=>x.QuizName, opt=>opt.MapFrom(x=>x.Quiz.Name));
             AutoMapper.Mapper.CreateMap<QuestionDto, QuestionModel>();
