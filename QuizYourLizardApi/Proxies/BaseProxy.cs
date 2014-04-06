@@ -35,7 +35,7 @@ namespace QuizYourLizardApi.Proxies
             ApiUri = entity.ApiUri;
         }
 
-        public List<T> GetAllEntities()
+        public virtual List<T> GetAllEntities()
         {
             var model = Client.GetAsync(ApiUri).Result
                     .Content.ReadAsAsync<List<T>>().Result;
@@ -43,7 +43,7 @@ namespace QuizYourLizardApi.Proxies
             return model;
         }
 
-        public HttpResponseMessage CreateNewEntity(T entity)
+        public virtual HttpResponseMessage CreateNewEntity(T entity)
         {
             var result = Client.PostAsync(ApiUri, entity
                         , new JsonMediaTypeFormatter()).Result;
@@ -51,7 +51,7 @@ namespace QuizYourLizardApi.Proxies
             return result;
         }
 
-        public T GetEntityById(Guid id)
+        public virtual T GetEntityById(Guid id)
         {
             var model = Client.GetAsync(string.Format(@"{0}/{1}", ApiUri, id)).Result
                 .Content.ReadAsAsync<T>().Result;
@@ -59,7 +59,7 @@ namespace QuizYourLizardApi.Proxies
             return model;
         }
 
-        public HttpResponseMessage UpdateEntity(T entity)
+        public virtual HttpResponseMessage UpdateEntity(T entity)
         {
             var result = Client.PutAsync(string.Format(@"{0}/{1}", ApiUri, entity.Id), entity
                    , new JsonMediaTypeFormatter()).Result;
@@ -67,7 +67,7 @@ namespace QuizYourLizardApi.Proxies
             return result;
         }
 
-        public HttpResponseMessage DeleteEntity(Guid id)
+        public virtual HttpResponseMessage DeleteEntity(Guid id)
         {
             var result = Client.DeleteAsync(string.Format(@"{0}/{1}", ApiUri, id)).Result;
 

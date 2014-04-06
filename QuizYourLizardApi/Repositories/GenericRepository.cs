@@ -45,7 +45,6 @@ public class GenericRepository<C, T> :
 
     public virtual List<T> GetAllAsync()
     {
-        _entities.Configuration.LazyLoadingEnabled = false;
         return _entities.Set<T>().ToListAsync<T>().Result;
     }
 

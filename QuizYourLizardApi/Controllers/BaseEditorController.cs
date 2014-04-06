@@ -15,7 +15,7 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /BaseEditor 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             var model = Proxy.GetAllEntities();
 
@@ -24,7 +24,7 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /QuizEditor/Details/5
-        public ActionResult Details(Guid id)
+        public virtual ActionResult Details(Guid id)
         {
             var model = Proxy.GetEntityById(id);
 
@@ -33,7 +33,7 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /QuizEditor/Create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             return View();
         }
@@ -42,7 +42,7 @@ namespace QuizYourLizardApi.Controllers
         // POST: /QuizEditor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(T model)
+        public virtual ActionResult Create(T model)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /QuizEditor/Edit/5
-        public ActionResult Edit(Guid id)
+        public virtual ActionResult Edit(Guid id)
         {
             var model = Proxy.GetEntityById(id);
                 return View(model);
@@ -81,7 +81,7 @@ namespace QuizYourLizardApi.Controllers
         // POST: /QuizEditor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Guid id, T model)
+        public virtual ActionResult Edit(Guid id, T model)
         {
 
             if (ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace QuizYourLizardApi.Controllers
 
         //
         // GET: /QuizEditor/Delete/5
-        public ActionResult Delete(Guid id)
+        public virtual ActionResult Delete(Guid id)
         {
             var model = Proxy.GetEntityById(id);
             return View(model);
@@ -113,7 +113,7 @@ namespace QuizYourLizardApi.Controllers
         // POST: /QuizEditor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Guid id, T model)
+        public virtual ActionResult Delete(Guid id, T model)
         {
             try
             {

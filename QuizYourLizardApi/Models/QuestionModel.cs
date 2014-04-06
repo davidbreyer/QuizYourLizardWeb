@@ -29,9 +29,6 @@ namespace QuizYourLizardApi.Models
         public string QuizName { get; set; }
 
         [NotMapped]
-        public override string ApiUri
-        {
-            get { return Constants.QuestionApiUri; }
-        }
+        public override string ApiUri { get { return Constants.QuestionApiUri; } }
     }
 }
