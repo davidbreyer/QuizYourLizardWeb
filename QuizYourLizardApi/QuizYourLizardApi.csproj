@@ -209,7 +209,6 @@
     <Compile Include="Pocos\QuestionDto.cs" />
     <Compile Include="Pocos\QuizDto.cs" />
     <Compile Include="Proxies\BaseProxy.cs" />
-    <Compile Include="Proxies\QuizProxy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
