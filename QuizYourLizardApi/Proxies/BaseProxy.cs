@@ -16,10 +16,10 @@ namespace QuizYourLizardApi.Proxies
     {
         HttpClient Client { get; set; }
         List<T> GetAllEntities();
-        HttpResponseMessage CreateNewEntity(T entity);
+        ProxyResponseDto CreateNewEntity(T entity);
         T GetEntityById(Guid id);
-        HttpResponseMessage UpdateEntity(T entity);
-        HttpResponseMessage DeleteEntity(Guid id);
+        ProxyResponseDto UpdateEntity(T entity);
+        ProxyResponseDto DeleteEntity(Guid id);
 
     }
 
@@ -44,12 +44,17 @@ namespace QuizYourLizardApi.Proxies
             return model;
         }
 
-        public virtual HttpResponseMessage CreateNewEntity(T entity)
+        public virtual ProxyResponseDto CreateNewEntity(T entity)
         {
             var result = Client.PostAsync(ApiUri, entity
                         , new JsonMediaTypeFormatter()).Result;
 
-            return result;
+            return new ProxyResponseDto
+            {
+                Content = result.Content.ReadAsStringAsync().Result
+                ,
+                IsSuccessStatus = result.IsSuccessStatusCode
+            };
         }
 
         public virtual T GetEntityById(Guid id)
@@ -60,19 +65,29 @@ namespace QuizYourLizardApi.Proxies
             return model;
         }
 
-        public virtual HttpResponseMessage UpdateEntity(T entity)
+        public virtual ProxyResponseDto UpdateEntity(T entity)
         {
             var result = Client.PutAsync(string.Format(@"{0}/{1}", ApiUri, entity.Id), entity
                    , new JsonMediaTypeFormatter()).Result;
 
-            return result;
+            return new ProxyResponseDto
+            {
+                Content = result.Content.ReadAsStringAsync().Result
+                ,
+                IsSuccessStatus = result.IsSuccessStatusCode
+            };
         }
 
-        public virtual HttpResponseMessage DeleteEntity(Guid id)
+        public virtual ProxyResponseDto DeleteEntity(Guid id)
         {
             var result = Client.DeleteAsync(string.Format(@"{0}/{1}", ApiUri, id)).Result;
 
-            return result;
+
+            return new ProxyResponseDto
+            {
+                Content = result.Content.ReadAsStringAsync().Result
+                , IsSuccessStatus = result.IsSuccessStatusCode
+            };
         }
     }
 }

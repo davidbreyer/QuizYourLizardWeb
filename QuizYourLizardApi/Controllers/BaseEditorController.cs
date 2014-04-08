@@ -50,13 +50,13 @@ namespace QuizYourLizardApi.Controllers
                 if (ModelState.IsValid)
                 {
                     var result = Proxy.CreateNewEntity(model);
-                    if (result.IsSuccessStatusCode)
+                    if (result.IsSuccessStatus)
                     {
                         return RedirectToAction(@"Index");
                     }
                     else
                     {
-                        string content = result.Content.ReadAsStringAsync().Result;
+                        string content = result.Content;
                         return View();
                     }
                 }
@@ -88,13 +88,13 @@ namespace QuizYourLizardApi.Controllers
             if (ModelState.IsValid)
             {
                 var result = Proxy.UpdateEntity(model);
-                if (result.IsSuccessStatusCode)
+                if (result.IsSuccessStatus)
                 {
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    string content = result.Content.ReadAsStringAsync().Result;
+                    string content = result.Content;
                     return View();
                 }
             }
@@ -120,13 +120,13 @@ namespace QuizYourLizardApi.Controllers
             {
                 var result = Proxy.DeleteEntity(id);
 
-                if (result.IsSuccessStatusCode)
+                if (result.IsSuccessStatus)
                 {
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    string content = result.Content.ReadAsStringAsync().Result;
+                    string content = result.Content;
                     return View();
                 }
                 

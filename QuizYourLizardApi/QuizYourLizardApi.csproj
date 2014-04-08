@@ -206,6 +206,7 @@
     </Compile>
     <Compile Include="Pocos\AnswerDto.cs" />
     <Compile Include="Pocos\ClientEntity.cs" />
+    <Compile Include="Pocos\ProxyResponseDto.cs" />
     <Compile Include="Pocos\QuestionDto.cs" />
     <Compile Include="Pocos\QuizDto.cs" />
     <Compile Include="Proxies\BaseProxy.cs" />
