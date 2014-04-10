@@ -16,9 +16,9 @@ namespace QuizYourLizardApi.Controllers
     {
         IEnumerable<D> Get();
         D Get(Guid id);
-        void Post([FromBody]T value);
-        void Put(Guid id, [FromBody]T value);
-        void Delete(Guid id);
+        IHttpActionResult Post([FromBody]T value);
+        IHttpActionResult Put(Guid id, [FromBody]T value);
+        IHttpActionResult Delete(Guid id);
     }
 
     public abstract class BaseApiController<C, T, D> : ApiController, IBaseApiController<T, D>
@@ -40,24 +40,30 @@ namespace QuizYourLizardApi.Controllers
 
             return entityPoco;
         }
-        public void Post([FromBody]T value)
+        public IHttpActionResult Post([FromBody]T value)
         {
             Accessor.Repository.Add(value);
             Accessor.Commit();
+
+            return Ok();
         }
-        public void Put(Guid id, [FromBody]T value)
+        public IHttpActionResult Put(Guid id, [FromBody]T value)
         {
             value.Id = id;
             
             Accessor.Repository.Edit(value);
             Accessor.Commit();
+
+            return Ok();
         }
-        public void Delete(Guid id)
+        public IHttpActionResult Delete(Guid id)
         {
             var itemToDelete = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
             Accessor.Repository.Delete(itemToDelete);
             Accessor.Commit();
+
+            return Ok();
         }
     }
 }
