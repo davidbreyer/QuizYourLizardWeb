@@ -16,9 +16,9 @@ namespace QuizYourLizardApi.Controllers
     {
         IEnumerable<D> Get();
         D Get(Guid id);
-        IHttpActionResult Post([FromBody]T value);
-        IHttpActionResult Put(Guid id, [FromBody]T value);
-        IHttpActionResult Delete(Guid id);
+        HttpResponseMessage Post([FromBody]D value);
+        HttpResponseMessage Put(Guid id, [FromBody]D value);
+        HttpResponseMessage Delete(Guid id);
     }
 
     public abstract class BaseApiController<C, T, D> : ApiController, IBaseApiController<T, D>
@@ -40,30 +40,73 @@ namespace QuizYourLizardApi.Controllers
 
             return entityPoco;
         }
-        public IHttpActionResult Post([FromBody]T value)
+        public HttpResponseMessage Post([FromBody]D value)
         {
-            Accessor.Repository.Add(value);
-            Accessor.Commit();
+            //Validate Request
+            if (value == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The value passed to this service was null.") };
+            }
 
-            return Ok();
+            HttpResponseMessage response;
+
+            try
+            {
+                var entity = AutoMapper.Mapper.Map<D, T>(value);
+
+                Accessor.Repository.Add(entity);
+                Accessor.Commit();
+
+                response = Request.CreateResponse(HttpStatusCode.OK, entity);
+            }
+            catch (Exception ex)
+            {
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                response.Content = new StringContent(ex.GetBaseException().Message);
+            }
+
+            return response;
         }
-        public IHttpActionResult Put(Guid id, [FromBody]T value)
+        public HttpResponseMessage Put(Guid id, [FromBody]D value)
         {
-            value.Id = id;
-            
-            Accessor.Repository.Edit(value);
-            Accessor.Commit();
+            //Validate request
+            if (value == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The value passed to this service was null.") };
+            }
+            if (id == default(Guid))
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The ID of the entity being updated must not be empty. To create a new entity use POST.") };
+            }
 
-            return Ok();
+            HttpResponseMessage response;
+
+            try
+            {
+                var entity = AutoMapper.Mapper.Map<D, T>(value);
+
+                entity.Id = id;
+                Accessor.Repository.Edit(entity);
+                Accessor.Commit();
+
+                response = Request.CreateResponse(HttpStatusCode.OK, entity);
+            }
+            catch (Exception ex)
+            {
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                response.Content = new StringContent(ex.GetBaseException().Message);
+            }
+
+            return response;
         }
-        public IHttpActionResult Delete(Guid id)
+        public HttpResponseMessage Delete(Guid id)
         {
             var itemToDelete = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
 
             Accessor.Repository.Delete(itemToDelete);
             Accessor.Commit();
 
-            return Ok();
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
