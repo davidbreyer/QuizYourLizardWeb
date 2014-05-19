@@ -21,7 +21,6 @@ namespace QuizYourLizardApi.Models
         [Timestamp]
         public byte[] Timestamp { get; set; }
 
-        [NotMapped]
-        public abstract string ApiUri { get; }
+        public int SortOrder { get; set; }
     }
 }

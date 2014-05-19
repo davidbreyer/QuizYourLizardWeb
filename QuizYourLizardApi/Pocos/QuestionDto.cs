@@ -9,6 +9,7 @@ using System.Web;
 
 namespace QuizYourLizardApi.Pocos
 {
+    [ApiUriAttribute(ApiUri = Constants.QuestionApiUri)]
     public class QuestionDto : ClientEntity
     {
         public Guid QuizId { get; set; }
@@ -16,6 +17,5 @@ namespace QuizYourLizardApi.Pocos
         public string Text { get; set; }
         public ICollection<AnswerDto> Answers { get; set; }
         public string QuizName { get; set; }
-        public override string ApiUri { get { return Constants.QuestionApiUri; } }
     }
 }

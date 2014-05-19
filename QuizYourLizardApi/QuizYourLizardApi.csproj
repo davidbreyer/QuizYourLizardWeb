@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201404052255578_timestamp.Designer.cs">
       <DependentUpon>201404052255578_timestamp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201404231834599_20140423.cs" />
+    <Compile Include="Migrations\201404231834599_20140423.Designer.cs">
+      <DependentUpon>201404231834599_20140423.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pocos\AnswerDto.cs" />
     <Compile Include="Pocos\ClientEntity.cs" />
     <Compile Include="Pocos\ProxyResponseDto.cs" />
@@ -316,6 +320,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404052255578_timestamp.resx">
       <DependentUpon>201404052255578_timestamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404231834599_20140423.resx">
+      <DependentUpon>201404231834599_20140423.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Quiz\Localization.de.resx" />
     <EmbeddedResource Include="Resources\Quiz\Localization.resx">

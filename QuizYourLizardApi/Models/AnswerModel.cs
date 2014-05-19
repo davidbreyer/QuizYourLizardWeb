@@ -23,8 +23,5 @@ namespace QuizYourLizardApi.Models
         [SoapIgnore]
         [JsonIgnore]
         public virtual QuestionModel Question { get ; set; }
-
-        [NotMapped]
-        public override string ApiUri { get { return Constants.AnswerApiUri; } }
     }
 }

@@ -13,4 +13,9 @@ namespace QuizYourLizardApi.CrossCutting
             return url.GetLeftPart(UriPartial.Authority);
         }
     }
+
+    public class ApiUriAttribute : Attribute
+    {
+        public string ApiUri { get; set; }
+    }
 }

@@ -15,8 +15,5 @@ namespace QuizYourLizardApi.Models
         public string Name { get; set; }
 
         public virtual ICollection<QuestionModel> Questions { get; set; }
-
-        [NotMapped]
-        public override string ApiUri { get { return Constants.QuizApiUri; } }
     }
 }

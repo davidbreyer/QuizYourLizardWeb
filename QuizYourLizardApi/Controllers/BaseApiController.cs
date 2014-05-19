@@ -45,24 +45,30 @@ namespace QuizYourLizardApi.Controllers
             //Validate Request
             if (value == null)
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The value passed to this service was null.") };
+                ModelState.AddModelError("error", "The value passed to this service was null.");
             }
 
             HttpResponseMessage response;
 
             try
             {
-                var entity = AutoMapper.Mapper.Map<D, T>(value);
+                if (ModelState.IsValid)
+                {
+                    var entity = AutoMapper.Mapper.Map<D, T>(value);
 
-                Accessor.Repository.Add(entity);
-                Accessor.Commit();
+                    Accessor.Repository.Add(entity);
+                    Accessor.Commit();
 
-                response = Request.CreateResponse(HttpStatusCode.OK, entity);
+                    response = Request.CreateResponse(HttpStatusCode.OK, entity);
+                }
+                else
+                {
+                    response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
             }
             catch (Exception ex)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest);
-                response.Content = new StringContent(ex.GetBaseException().Message);
+                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.GetBaseException().Message);
             }
 
             return response;
@@ -72,41 +78,76 @@ namespace QuizYourLizardApi.Controllers
             //Validate request
             if (value == null)
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The value passed to this service was null.") };
-            }
-            if (id == default(Guid))
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The ID of the entity being updated must not be empty. To create a new entity use POST.") };
+                //return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("The value passed to this service was null.") };
+                ModelState.AddModelError("error", "The value passed to this service was null.");
             }
 
             HttpResponseMessage response;
 
             try
             {
-                var entity = AutoMapper.Mapper.Map<D, T>(value);
+                if (ModelState.IsValid)
+                {
+                    var entity = AutoMapper.Mapper.Map<D, T>(value);
 
-                entity.Id = id;
-                Accessor.Repository.Edit(entity);
-                Accessor.Commit();
+                    entity.Id = id;
+                    if (entity.Id == default(Guid))
+                    {
+                        Accessor.Repository.Add(entity);
+                    }
+                    else
+                    {
+                        Accessor.Repository.Edit(entity);
+                    }
+                    Accessor.Commit();
 
-                response = Request.CreateResponse(HttpStatusCode.OK, entity);
+                    response = Request.CreateResponse(HttpStatusCode.OK, entity);
+                }
+                else
+                {
+                    response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
             }
             catch (Exception ex)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest);
-                response.Content = new StringContent(ex.GetBaseException().Message);
+                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.GetBaseException().Message);
             }
 
             return response;
         }
         public HttpResponseMessage Delete(Guid id)
         {
-            var itemToDelete = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+            //Validate Request
+            if(id == default(Guid))
+            {
+                ModelState.AddModelError("error", @"Specified ID is not valid.");
+            }
 
-            Accessor.Repository.Delete(itemToDelete);
-            Accessor.Commit();
+            HttpResponseMessage response;
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                var itemToDelete = Accessor.Repository.FindBy(x => x.Id == id).SingleOrDefault();
+                if(itemToDelete == null) { ModelState.AddModelError("error", string.Format("No {0} found to delete with ID {1}.", typeof(T).Name, id)); }
+
+                if (ModelState.IsValid)
+                {
+                    Accessor.Repository.Delete(itemToDelete);
+                    Accessor.Commit();
+
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+            }
+            catch(Exception ex)
+            {
+                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.GetBaseException().Message);
+            }
+
+            return response;
         }
     }
 }

@@ -7,6 +7,7 @@ using QuizYourLizardApi.Repositories;
 using System;
 using System.Configuration;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using Unity.WebApi;

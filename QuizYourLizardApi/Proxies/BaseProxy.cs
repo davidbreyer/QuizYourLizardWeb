@@ -32,8 +32,10 @@ namespace QuizYourLizardApi.Proxies
 
         public BaseProxy()
         {
-            var entity = new T();
-            ApiUri = entity.ApiUri;
+            var attr = System.Attribute.GetCustomAttributes(typeof(T), typeof(ApiUriAttribute)).SingleOrDefault();
+            
+            if (attr != null)
+                ApiUri = (attr as ApiUriAttribute).ApiUri;
         }
 
         public virtual List<T> GetAllEntities()

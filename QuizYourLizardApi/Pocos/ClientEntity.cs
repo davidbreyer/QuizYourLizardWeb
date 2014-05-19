@@ -10,6 +10,6 @@ namespace QuizYourLizardApi.Pocos
         public Guid Id { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset Updated { get; set; }
-        public abstract string ApiUri { get; }
+        public int SortOrder { get; set; }
     }
 }

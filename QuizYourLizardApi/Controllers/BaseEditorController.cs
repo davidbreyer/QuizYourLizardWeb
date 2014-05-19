@@ -57,6 +57,8 @@ namespace QuizYourLizardApi.Controllers
                     else
                     {
                         string content = result.Content;
+                        ModelState.AddModelError("", content);
+                        
                         return View();
                     }
                 }
